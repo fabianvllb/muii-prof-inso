@@ -108,9 +108,9 @@ function preventNotAuthenticated(req, res, next) {
 app.post("/login", (req, res, next) => {
     try {
         const { email, password } = req.body;
-        console.log(
-            "\nLogin request:" + "\nEmail: " + email + "\nPassword: " + password
-        );
+        // console.log(
+        //     "\nLogin request:" + "\nEmail: " + email + "\nPassword: " + password
+        // );
         let errors = {};
         let errorsFound = false;
         if (!validator.validate(email)) {
@@ -162,9 +162,9 @@ app.get("/", forwardAuthenticated, (req, res) => {
 app.post("/register", (req, res) => {
     try {
         const { email, password } = req.body;
-        console.log(
-            "\Register request:" + "\nEmail: " + email + "\nPassword: " + password
-        );
+        // console.log(
+        //     "\Register request:" + "\nEmail: " + email + "\nPassword: " + password
+        // );
         let errors = {};
         let errorsFound = false;
         if (!validator.validate(email)) {
