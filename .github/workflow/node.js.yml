@@ -25,9 +25,4 @@ jobs:
       - run: npm ci
       - run: npm run build --if-present
       - run: echo "${{ secrets.ENV_FILE }}" > .env
-      - run: sudo apt-get -y install xorg xvfb gtk2-engines-pixbuf
-      - run: sudo apt-get -y install imagemagick x11-apps
-      - run: sudo apt-get -y install dbus-x11 xfonts-base xfonts-100dpi xfonts-75dpi xfonts-cyrillic xfonts-scalable
-      - run: Xvfb -ac :99 -screen 0 1280x1024x16 & export DISPLAY=:99
-      - run: google-chrome
       - run: npm test
