@@ -35,7 +35,7 @@ describe("Authentication", () => {
         let testNumber = 0;
         let screenShotNumber = 0;
         // open / page [defaultViewport: null -> take viewport size]
-        browser = await puppeteer.launch({ headless: false, defaultViewport: null});
+        browser = await puppeteer.launch({ headless: true, defaultViewport: null});
         page = await browser.newPage();
         await page.goto("http://localhost:" + port);
         expect(page.url()).toContain("http://localhost:" + port) // expect / page
