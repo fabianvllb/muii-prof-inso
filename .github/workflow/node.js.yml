@@ -2,7 +2,12 @@
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
 name: Node.js CI
-
+env:
+  SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+  MONGODB_URI: ${{ secrets.MONGODB_URI }}
+  MIN_PASSWORD_LENGTH: ${{ secrets.MIN_PASSWORD_LENGTH }}
+  MAX_PASSWORD_LENGTH: ${{ secrets.MAX_PASSWORD_LENGTH }}
+  DB_MODEL_NAME: ${{ secrets.DB_MODEL_NAME }}
 on:
   push:
     branches: ["main", "development"]
