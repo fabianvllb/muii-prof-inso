@@ -21,6 +21,9 @@
   "bugs": {
     "url": "https://github.com/Fabianvc88/muii-prof-inso/issues"
   },
+  "dotenv": {
+    "systemvars": true
+  },
   "homepage": "https://github.com/Fabianvc88/muii-prof-inso#readme",
   "dependencies": {
     "assert": "^2.0.0",
