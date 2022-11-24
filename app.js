@@ -42,10 +42,9 @@ app.use(passport.session());
 express_logger.initializeLogger(app);
 const logger = express_logger.getLogger();
 
+console.log(maxPwdLength);
 console.log(mongoDBURI);
 console.log(dbModelName);
-console.log(mongoDBURI != undefined);
-console.log(dbModelName != undefined);
 
 // 5. set up and connect to database
 mongoose.set("sanitizeFilter", true);
