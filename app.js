@@ -1,8 +1,8 @@
 // 1. handle development vs production environment
 if (process.env.NODE_ENV === "production") {
-    console.log("We are in production...");
+    console.log("We are in production.");
 } else {
-    console.log("We are in development...");
+    console.log("We are in development.");
 }
 
 // 2. load environment variables (think of internal passwords)
