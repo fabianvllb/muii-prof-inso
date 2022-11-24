@@ -1,4 +1,4 @@
-// Run: npm start
+// Run: npm run dev (local) || npm start (prod)
 
 // 1. import dependencies
 import { app } from './app.js';

@@ -4,7 +4,8 @@
   "description": "Proyecto de Profundización en Ingeniería de Software del Máster en Ingeniería Informática",
   "main": "server.js",
   "scripts": {
-    "start": "node -r dotenv/config server.js",
+    "start": "node server.js",
+    "dev": "node -r dotenv/config server.js",
     "test": "node -r dotenv/config --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "repository": {
