@@ -17,12 +17,12 @@ jobs:
     steps:
       - name: Create env file
       - run:
-        touch .env
-        echo SESSION_SECRET=${{ secrets.SESSION_SECRET }} >> .env
-        echo MONGODB_URI=${{ secrets.MONGODB_URI }} >> .env
-        echo MIN_PASSWORD_LENGTH=${{ secrets.MIN_PASSWORD_LENGTH }} >> .env
-        echo MAX_PASSWORD_LENGTH=${{ secrets.MAX_PASSWORD_LENGTH }} >> .env
-        echo DB_MODEL_NAME=${{ secrets.DB_MODEL_NAME }} >> .env
+          touch .env
+          echo SESSION_SECRET=${{ secrets.SESSION_SECRET }} >> .env
+          echo MONGODB_URI=${{ secrets.MONGODB_URI }} >> .env
+          echo MIN_PASSWORD_LENGTH=${{ secrets.MIN_PASSWORD_LENGTH }} >> .env
+          echo MAX_PASSWORD_LENGTH=${{ secrets.MAX_PASSWORD_LENGTH }} >> .env
+          echo DB_MODEL_NAME=${{ secrets.DB_MODEL_NAME }} >> .env
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
