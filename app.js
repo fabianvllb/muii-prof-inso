@@ -10,6 +10,7 @@ const sessionSecret = process.env.SESSION_SECRET;
 const minPwdLength = process.env.MIN_PASSWORD_LENGTH;
 const maxPwdLength = process.env.MAX_PASSWORD_LENGTH;
 const dbModelName = process.env.DB_MODEL_NAME;
+const dbQueryModel = process.env.DB_QUERY_MODEL;
 const mongoDBURI = process.env.MONGODB_URI;
 
 // 3. import dependencies
@@ -50,6 +51,15 @@ const userSchema = new Schema({
     password: String,
 });
 const User = mongoose.model(dbModelName, userSchema);
+
+const querySchema = new Schema ({
+    description: String,
+    type: String,
+    userEmail: String,
+    enable: Boolean
+})
+const Query = mongoose.model(dbQueryModel, querySchema);
+
 mongoose.connect(mongoDBURI).then(
     () => {
       console.log("We are connected to MongoDB.");
@@ -116,7 +126,7 @@ passport.use(
 function forwardAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         res.redirect("/user");
-    } else {
+    } else { 
         return next();
     }
 }
@@ -281,5 +291,108 @@ app.get("/user", preventNotAuthenticated, (req, res) => {
     res.render("user.ejs");
 });
 
+
+// -----------------------------------------------------------------------------
+// QUERIES MANAGEMENT (TAIGA-EPIC #5)
+
+// Add query
+app.post("/addQuery", (req, res) => {
+    const origin = req.headers["origin"];
+    const userAgent = req.headers["user-agent"];
+    try {
+        assert(Object.keys(req.body).length > 0);
+        const { description, type, userEmail } = req.body;
+        debugLog(origin, userAgent, "Add query request:" + 
+                                    "\Desc: " + description +
+                                    "\nType: " + type + 
+                                    "\nUser: " + userEmail);
+
+        let errors = {};
+
+        Query.findOne( { description: description, 
+                         type: type, 
+                         userEmail: userEmail } ).then((query) => {
+            // If query exists: error
+            if (query) {
+                debugLog(origin, userAgent, "Query already exists.");
+                Object.assign(errors, {
+                    queryAlreadyExists: "Query already exists",
+                });
+                res.send({ errors: errors });
+            }
+            // Query doesn't exist: create
+            else {
+                debugLog(origin, userAgent, "Creating user query...");
+                new Query({
+                    description: description,
+                    type: type,
+                    userEmail: userEmail,
+                    enable: true
+                })
+                .save()
+                .then(() => {
+                    debugLog(origin, userAgent, "Success. New query added.");
+                    res.send({ success: {} });
+                })
+                .catch((err) => {
+                    debugLog(origin, userAgent, "Error adding query: " + err.message);
+                    throw err;
+                });
+            }
+        });
+    }
+    catch (err) {
+        debugLog(origin, userAgent, "Query creation error: " + err.message);
+        res.send({ errors: { generalError: "Please, try again." } });
+    }
+
+});
+
+// Delete query
+app.post("/delQuery", (req, res) => {
+    const origin = req.headers["origin"];
+    const userAgent = req.headers["user-agent"];
+    try {
+        assert(Object.keys(req.body).length > 0);
+        const { description, type, userEmail } = req.body;
+        debugLog(origin, userAgent, "Delete query request:" + 
+                                    "\Desc: " + description +
+                                    "\nType: " + type + 
+                                    "\nUser: " + userEmail);
+        let errors = {};
+        Query.findOne( { description: description, 
+                         type: type, 
+                         userEmail: userEmail } ).then((query) => {
+            
+            // If query exists: delete
+            if (query) {
+                debugLog(origin, userAgent, "Deleting query...")
+                Query.deleteOne(query)
+                .then(() => {
+                    debugLog(origin, userAgent, "Success. Query removed.");
+                    res.send({ success: {} });
+                })
+                .catch((err) => {
+                    debugLog(origin, userAgent, "Error deleting query: " + err.message);
+                    throw err;
+                });
+            }
+            // If query doesn't exists: error
+            else {
+                debugLog(origin, userAgent, "Query doesn't exists.");
+                Object.assign(errors, {
+                    queryNonExists: "Query does not exist",
+                });
+                res.send({ errors: errors });
+            }
+        });
+    }
+    catch (err) {
+        debugLog(origin, userAgent, "Delete query error: " + err.message);
+        res.send({ errors: { generalError: "Please, try again." } });
+    }
+});
+
+
 // 12. export
-export { app, mongoose, User };
+export { app, mongoose, User, Query };
