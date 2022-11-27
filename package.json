@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node -r dotenv/config server.js",
-    "test": "node -r dotenv/config --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "node -r dotenv/config --experimental-vm-modules node_modules/jest/bin/jest.js --forceExit"
   },
   "repository": {
     "type": "git",

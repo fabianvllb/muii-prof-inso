@@ -46,7 +46,14 @@ app.use(session({
     saveUninitialized: false,
     cookie: { sameSite: true },
     store: store
-}))
+})); // --forceExit in package.json test script
+// https://stackoverflow.com/questions/72896114/jest-doesnt-terminate-if-there-is-any-store-is-created-with-mongodb-even-if-its
+// "Jest doesn't terminate if there is any store created with mongodb even if it's not used.
+// I have spent days on it without any progress except --forceExit on Jest.
+// As far as I understand, sessions are handled by superagent within supertest, 
+// so as a solution I just removed connect-mongo from test environment since its not used.
+// By the way I have also tried with connect-mongodb-session instead of connect-mongo and it didnt help."
+// -> This would be another option.
 app.use(passport.initialize());
 app.use(passport.session());
 express_logger.initializeLogger(app);
