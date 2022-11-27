@@ -1,4 +1,4 @@
-// 1. handle development vs production environment
+// 1. development vs production environment
 if (process.env.NODE_ENV === "production") {
     console.log("We are in production.");
 } else {
@@ -77,14 +77,14 @@ mongoose.connect(mongoDBURI).then(
 );
 
 // 6. handle debug logs
-function debugLog(origin, userAgent, eventMsg) {
+const debugLog = (origin, userAgent, eventMsg) => {
     logger.debug("\nOrigin: " + origin +
                  "\nUserAgent: " + userAgent +
                  "\nEvent: " + eventMsg);
 }
 
 // 7. verify password constraints
-function checkValidPassword(pwd) {
+const checkValidPassword = (pwd) => {
     try {
         return (typeof pwd === 'string' || pwd instanceof String) && minPwdLength <= pwd.length && pwd.length <= maxPwdLength
     }
@@ -130,14 +130,14 @@ passport.use(
         })
     })
 );
-function forwardAuthenticated(req, res, next) {
+const forwardAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {
         res.redirect("/user");
     } else {
         return next();
     }
 }
-function preventNotAuthenticated(req, res, next) {
+const preventNotAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {
         return next();
     } else {
@@ -172,18 +172,20 @@ app.post("/login", (req, res, next) => {
         } else {
             debugLog(origin, userAgent, "Pre-login checks passed. Attempting login...");
             let redirectRoute = "/user";
-            passport.authenticate("local", function (err, user, info) {
+            passport.authenticate("local", (err, user, info) => {
                 if (err) {
-                    throw err;
+                    debugLog(origin, userAgent, "Login error: passport.authenticate: " + err.message);
+                    res.send({ errors: { generalError: "Please, try again." } });
                 } else if (!user) {
                     Object.assign(errors, {
                         emailPassCombinationError: "Please, enter valid credentials",
                   });
                   res.send({ errors: errors });
                 } else {
-                    req.logIn(user, function (err) {
+                    req.logIn(user, (err) => {
                         if (err) {
-                            throw err;
+                            debugLog(origin, userAgent, "Login error: req.login: " + err.message);
+                            res.send({ errors: { generalError: "Please, try again." } });
                         } else {
                             res.send({ success: { redirectRoute: redirectRoute } });
                         }
@@ -241,13 +243,13 @@ app.post("/register", (req, res) => {
                     bcrypt.genSalt(10, (err, salt) => {
                         if (err) {
                             debugLog(origin, userAgent, "Register error. Salting error: " + err.message);
-                            throw err;
+                            res.send({ errors: { generalError: "Please, try again." } });
                         }
                         else {
                             bcrypt.hash(password, salt, (err, hashedPassword) => {
                                 if (err) {
                                     debugLog(origin, userAgent, "Register error. Hashing error: " + err.message);
-                                    throw err;
+                                    res.send({ errors: { generalError: "Please, try again." } });
                                 }
                                 else {
                                     new User({
@@ -261,7 +263,7 @@ app.post("/register", (req, res) => {
                                     })
                                     .catch((err) => {
                                         debugLog(origin, userAgent, "Register error. Error adding user: " + err.message);
-                                        throw err;
+                                        res.send({ errors: { generalError: "Please, try again." } });
                                     });
                                 }
                             });
@@ -283,9 +285,9 @@ app.post("/logout", (req, res, next) => {
     const userAgent = req.headers["user-agent"];
     debugLog(origin, userAgent, "Logout request.")
     req.session.user = null;
-    req.session.save(function (err) {
+    req.session.save((err) => {
         if (err) next(err)
-        req.session.regenerate(function (err) {
+        req.session.regenerate((err) => {
             if (err) next(err)
             res.send({});
             // res.redirect("/");
