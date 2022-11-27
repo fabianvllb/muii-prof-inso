@@ -86,7 +86,7 @@ describe("Authentication", () => {
         expect(page.url()).toContain("http://localhost:" + port) // expect / page
         await page.screenshot({ path: screenshotsPath + "screenshot-test" + testNumber + "#" + screenShotNumber + ".png" });
         screenShotNumber += 1;
-    }, 12000); // 12s
+    }, 20000); // 20s
 
     test("Unauthenticated access to /user", async () => {
         let testNumber = 1;
@@ -96,5 +96,5 @@ describe("Authentication", () => {
         expect(page.url()).not.toBe("http://localhost:" + port + "/user") // expect / redirection
         await page.screenshot({ path: screenshotsPath + "screenshot-test" + testNumber + "#" + screenShotNumber + ".png" });
         screenShotNumber += 1;
-    }, 12000); // 12s
+    }, 20000); // 20s
 });
