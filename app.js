@@ -2,10 +2,10 @@
 if (process.env.NODE_ENV === "production") {
     console.log("We are in production.");
 } else {
-    console.log("We are in development.");
+    console.log("We are in development (localhost).");
 }
 
-// 2. load environment variables (think of internal passwords)
+// 2. load environment variables
 const sessionSecret = process.env.SESSION_SECRET;
 const minPwdLength = process.env.MIN_PASSWORD_LENGTH;
 const maxPwdLength = process.env.MAX_PASSWORD_LENGTH;
@@ -19,10 +19,11 @@ import express_logger from "express-logger-unique-req-id";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import passport from "passport";
-import {Strategy as LocalStrategy} from "passport-local";
+import { Strategy as LocalStrategy } from "passport-local";
 import session from "express-session";
 import validator from "email-validator";
 import assert from "assert";
+import { default as connectMongoDBSession } from 'connect-mongodb-session';
 
 // 4. configure app
 const app = express();
@@ -31,11 +32,20 @@ app.set("view engine", "ejs");
 app.use(helmet());
 app.use(express.json());
 app.use(express.static("public"));
+const MongoDBStore = connectMongoDBSession(session);
+var store = new MongoDBStore({
+    uri: mongoDBURI,
+    collection: "mySessions"
+});
+store.on("error", (error) => {
+    console.log("MongoDBStore error: ", error);
+});
 app.use(session({
     secret: sessionSecret,
     resave: true,
     saveUninitialized: false,
-    cookie: { sameSite: true }
+    cookie: { sameSite: true },
+    store: store
 }))
 app.use(passport.initialize());
 app.use(passport.session());
