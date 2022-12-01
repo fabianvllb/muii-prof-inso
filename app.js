@@ -65,6 +65,7 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
     email: String,
     password: String,
+    subscriptionList: [String],
 });
 const User = mongoose.model(dbModelName, userSchema);
 mongoose.connect(mongoDBURI).then(
@@ -298,6 +299,43 @@ app.post("/logout", (req, res, next) => {
 // 11. handle user
 app.get("/user", preventNotAuthenticated, (req, res) => {
     res.render("user.ejs");
+});
+
+// -----------------------------------------------------------------------------
+// Subscripción a páginas de interés (TAIGA-EPIC #7)
+
+//Send subscribed pages list data for rendering
+app.get("/feed", preventNotAuthenticated, (req, res) => {
+  const origin = req.headers["origin"];
+  const userAgent = req.headers["user-agent"];
+  let subscribedPagesData;
+  User.findOne({ email: req.user.email }).then((existingUser) => {
+    if (!existingUser) {
+      debugLog("", "", "Feed error: " + email + " not found.");
+      return res.send({ errors: { generalError: "Couldn't find user, please try again." } });;
+    }
+    for(page in subscriptionList){
+      Page.findOne({ pageId: page.id}).then((subscribedPage) => {
+        subscribedPagesData.push(subscribedPage);
+      });
+    }
+    res.send({ subscribedPagesData: subscribedPagesData });
+  });
+});
+
+//Subscribe to new page
+app.post("/subscribe", (req, res) => {
+  const origin = req.headers["origin"];
+  const userAgent = req.headers["user-agent"];
+  const pageURL = req.body.pageURL;
+  User.findOne({ email: req.user.email }).then((err, existingUser) => {
+    if (!existingUser) {
+      debugLog("", "", "Subscribe error: " + req.user.email + " not found.");
+      return res.send({ errors: { generalError: "Couldn't subscribe, please try again." } });;
+    }
+    existingUser.subscriptionList.push(pageURL);
+    res.send({ success: {} });
+  });
 });
 
 // 12. export
