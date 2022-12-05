@@ -15,8 +15,11 @@ public class WebData {
         return oldData;
     }
 
-    public boolean hasData() {
-        return !(newData == null || oldData == null || newData.equals("") || oldData.equals(""));
+    public boolean hasOldData() {
+        return !(oldData == null || oldData.equals(""));
+    }
+    public boolean hasNewData() {
+        return !(newData == null || newData.equals(""));
     }
 
     public void setNewData(String newData) {

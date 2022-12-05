@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public class DataRecoveryTest {
 
-    DataRecovery dataRecovery = new DataRecovery();
+    DataRecoveryAndComparison dataRecovery = new DataRecoveryAndComparison();
     @Test
     public void checkDatabaseConnection(){ // TODO when database conection is done
     }
