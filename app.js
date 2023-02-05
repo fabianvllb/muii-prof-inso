@@ -24,6 +24,7 @@ import {Strategy as LocalStrategy} from "passport-local";
 import session from "express-session";
 import validator from "email-validator";
 import assert from "assert";
+import { Console } from "console";
 
 // 4. configure app
 const app = express();
@@ -393,6 +394,48 @@ app.post("/delQuery", (req, res) => {
     }
 });
 
+// Display query
+app.post("/disQuery", (req, res) => {
+    const origin = req.headers["origin"];
+    const userAgent = req.headers["user-agent"];
+    try {
+        assert(Object.keys(req.body).length > 0);
+        const { description, type, userEmail } = req.body;
+        debugLog(origin, userAgent, "Display query request:" + 
+                                    "\Desc: " + description +
+                                    "\nType: " + type + 
+                                    "\nUser: " + userEmail);
+        let errors = {};
+        Query.findById( { userEmail: userEmail } ).then((query) => {
+            
+            // If query exists: display
+            if (query) {
+                debugLog(origin, userAgent, "Displaying query...")
+                Console.log(description, type, userEmail)
+                .then(() => {
+                    debugLog(origin, userAgent, "Success. Query displayed.");
+                    res.send({ success: {} });
+                })
+                .catch((err) => {
+                    debugLog(origin, userAgent, "Error displaying query: " + err.message);
+                    throw err;
+                });
+            }
+            // If query doesn't exists: error
+            else {
+                debugLog(origin, userAgent, "Query doesn't exists.");
+                Object.assign(errors, {
+                    queryNonExists: "Query does not exist",
+                });
+                res.send({ errors: errors });
+            }
+        });
+    }
+    catch (err) {
+        debugLog(origin, userAgent, "Delete query error: " + err.message);
+        res.send({ errors: { generalError: "Please, try again." } });
+    }
+});
 
 // 12. export
 export { app, mongoose, User, Query };

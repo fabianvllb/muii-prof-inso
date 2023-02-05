@@ -123,3 +123,19 @@ describe("POST /delQuery", () => {
         expect(response.body.errors.queryNonExists).toEqual(expect.anything());
     });
 });
+
+describe("POST /disQuery", () => {
+    /** 
+     * TEST 1
+     * Test: Display a non-existing query
+     * Expected result: Query does not exist error (queryNonExists)
+     */
+    test("Display a non-existing query", async () => {
+        const response = await request(app).post("/disQuery").send( {
+            "userEmail": "test5@email.com"
+        });
+        expect(response.statusCode).toBe(200);
+        expect(response.headers["content-type"]).toContain("json");
+        expect(response.body.errors.queryNonExists).toEqual(expect.anything());
+    });
+});
