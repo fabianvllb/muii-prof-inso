@@ -50,7 +50,7 @@ app.use(session({
 // https://stackoverflow.com/questions/72896114/jest-doesnt-terminate-if-there-is-any-store-is-created-with-mongodb-even-if-its
 // "Jest doesn't terminate if there is any store created with mongodb even if it's not used.
 // I have spent days on it without any progress except --forceExit on Jest.
-// As far as I understand, sessions are handled by superagent within supertest, 
+// As far as I understand, sessions are handled by superagent within supertest,
 // so as a solution I just removed connect-mongo from test environment since its not used.
 // By the way I have also tried with connect-mongodb-session instead of connect-mongo and it didnt help."
 // -> This would be another option.
@@ -201,6 +201,10 @@ app.post("/login", (req, res, next) => {
 })
 app.get("/", forwardAuthenticated, (req, res) => {
     res.render("auth.ejs");
+});
+
+app.get("/subscribbed",(req, res) =>{
+  res.render("subscribbed.ejs");
 });
 
 // 9. handle register
