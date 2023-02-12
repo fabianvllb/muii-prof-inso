@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class WebCompareTest {
 
-    WebCompare testClass = new WebCompare();
+    DataRecoveryAndComparison testClass = new DataRecoveryAndComparison();
 
     @Test
     public void htmlCompareTestOk(){
