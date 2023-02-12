@@ -17,12 +17,12 @@ public class DataRecoveryAndComparison {
                 fullData.get(url).setNewData(Jsoup.connect(url).get().html());
                 //TODO insert new data into database
             } catch (IOException ex) {
-                LOGGER.error("Web page "+ url +" returned error when accessed");//TODO What do we do with failed access?
+                LOGGER.error("Web page "+ url +" returned error when accessed");                //TODO What do we do with failed access?
             }
         }
     }
 
-    public Map<String, String> diferenceExtraction(Map<String, WebData> data) {//TODO First approach needs work
+    public Map<String, String> diferenceExtraction(Map<String, WebData> data) {                 //TODO First approach needs work
         Map<String, String> differences = new HashMap<>();
         for (String name : data.keySet()) {
             if (!data.get(name).hasOldData() || !data.get(name).hasNewData()) {

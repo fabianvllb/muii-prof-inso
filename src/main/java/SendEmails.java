@@ -4,6 +4,9 @@ import javax.mail.*;
 import javax.mail.internet.*;
 
 public class SendEmails {
+    static DataRecoveryAndComparison data = new DataRecoveryAndComparison();
+    static Map<String, WebData> recoveredData = new HashMap<>();
+
     public static void main(String[] args) {
         List<String> emailAddresses = new ArrayList<>();
         Connection conn = null;
@@ -46,7 +49,7 @@ public class SendEmails {
                 message.setFrom(new InternetAddress("sender@gmail.com"));
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailAddress));
                 message.setSubject("Subject");
-                message.setText("Hello,\n\nThis is a test email.");
+                message.setText(data.diferenceExtraction(recoveredData).get("url"));
 
                 Transport.send(message);
                 System.out.println("Sent email to " + emailAddress);
