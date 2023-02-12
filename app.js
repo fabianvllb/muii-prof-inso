@@ -62,10 +62,15 @@ const logger = express_logger.getLogger();
 // 5. set up and connect to database
 mongoose.set("sanitizeFilter", true);
 const Schema = mongoose.Schema;
+/*const subscriptionSchema = new Schema({
+  title: String,
+  url: String,
+  description: String,
+})*/
 const userSchema = new Schema({
-    email: String,
-    password: String,
-    subscriptionList: [String],
+  email: String,
+  password: String,
+  subscriptionList: [String],
 });
 const User = mongoose.model(dbModelName, userSchema);
 mongoose.connect(mongoDBURI).then(
@@ -308,34 +313,43 @@ app.get("/user", preventNotAuthenticated, (req, res) => {
 app.get("/feed", preventNotAuthenticated, (req, res) => {
   const origin = req.headers["origin"];
   const userAgent = req.headers["user-agent"];
+  debugLog(origin, userAgent, "feed request.");
   let subscribedPagesData;
   User.findOne({ email: req.user.email }).then((existingUser) => {
     if (!existingUser) {
       debugLog("", "", "Feed error: " + email + " not found.");
       return res.send({ errors: { generalError: "Couldn't find user, please try again." } });;
     }
-    for(page in subscriptionList){
-      Page.findOne({ pageId: page.id}).then((subscribedPage) => {
-        subscribedPagesData.push(subscribedPage);
-      });
-    }
-    res.send({ subscribedPagesData: subscribedPagesData });
+    res.send({ subscriptionList: existingUser.subscriptionList});
   });
 });
 
 //Subscribe to new page
-app.post("/subscribe", (req, res) => {
+app.post("/subscribe", preventNotAuthenticated, (req, res) => {
   const origin = req.headers["origin"];
   const userAgent = req.headers["user-agent"];
-  const pageURL = req.body.pageURL;
-  User.findOne({ email: req.user.email }).then((err, existingUser) => {
-    if (!existingUser) {
-      debugLog("", "", "Subscribe error: " + req.user.email + " not found.");
-      return res.send({ errors: { generalError: "Couldn't subscribe, please try again." } });;
-    }
-    existingUser.subscriptionList.push(pageURL);
-    res.send({ success: {} });
-  });
+  debugLog(origin, userAgent, "URL subcription request.");
+  if (req.isAuthenticated()) {
+    // Retrieve the user ID from the request
+    const { title, url, description } = req.body;
+    console.log(req.user)
+    User.findOne({ email: req.user.email }).then((existingUser) => {
+      if (!existingUser) {
+        debugLog("", "", "Subscribe error: " +  req.user.email + " not found.");
+        return res.send({ errors: { generalError: "Couldn't subscribe, please try again." } });
+      }
+      existingUser.subscriptionList.push(url);
+      existingUser.save()
+      .then((user) => {
+        debugLog(origin, userAgent, "Update success. User subscription list updated.");
+        res.send({ success: {} });
+      })
+      .catch((err) => {
+          debugLog(origin, userAgent, "Update error. Error updating user subscription list: " + err.message);
+          res.send({ errors: { generalError: "Please, try again." } });
+      });
+    });
+  }
 });
 
 // 12. export

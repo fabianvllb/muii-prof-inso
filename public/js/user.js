@@ -3,10 +3,24 @@ const subButton = document.getElementById("add-new-site-button");
 const subList = document.querySelector(".subscription-list");
 
 subButton.addEventListener("click", addSite);
+document.getElementById("logout-button").addEventListener("click", logoutEvent);
+//document.getElementById("go-to-site-btn").addEventListener("click", goToSite);
 
-function addSite(event){
-  event.preventDefault();
 
+// get user subscriptions
+axios({
+  method: "get",
+  url: "/feed",
+  headers: { "Content-Type": "application/json" },
+}).then((response) =>  {
+  //console.log(response.data.subscriptionList[0]);
+  for (let i=0; i<response.data.subscriptionList.length; i++){
+    updateSubscriptionList(response.data.subscriptionList[i]);
+  }
+})
+
+function updateSubscriptionList(url){
+  // Create subscription card
   const subscriptionCard = document.createElement("div");
   subscriptionCard.className = "feed-card";
 
@@ -16,22 +30,12 @@ function addSite(event){
 
   const headerTitle = document.createElement("p");
   headerTitle.className = "card-title";
-  headerTitle.innerText = "Title";
+  if(url.length > 90){
+    headerTitle.innerText = url.substr(0,90).concat("...");
+  }else{
+    headerTitle.innerText = url;
+  }
   cardHeader.appendChild(headerTitle);
-
-  const cardTitleSeparator = document.createElement("p");
-  cardTitleSeparator.className = "card-title-separator";
-  cardTitleSeparator.innerText = "-";
-  cardHeader.appendChild(cardTitleSeparator);
-
-  const cardURL = document.createElement("p");
-  cardURL.innerText = subInput.value;
-  cardHeader.appendChild(cardURL);
-
-  const cardDescription = document.createElement("p");
-  cardDescription.className = "card-description";
-  cardDescription.innerText = "Description: No description yet";
-  subscriptionCard.appendChild(cardDescription);
 
   const cardButtons = document.createElement("div");
   cardButtons.className = "card-buttons";
@@ -39,6 +43,8 @@ function addSite(event){
 
   const siteButton = document.createElement("a");
   siteButton.innerText = "Site";
+  siteButton.href = url;
+  siteButton.target = "_blank";
   cardButtons.appendChild(siteButton);
 
   const editButton = document.createElement("a");
@@ -46,6 +52,30 @@ function addSite(event){
   cardButtons.appendChild(editButton);
 
   subList.appendChild(subscriptionCard);
+}
+
+function addSite(event){
+  event.preventDefault();
+
+  if(subInput.value == "") return;
+
+  // Send subscription to server
+  axios({
+    method: "post",
+    url: "/subscribe",
+    data: {
+      title: "Title",
+      url: subInput.value,
+      description: "No description"
+    },
+    headers: { "Content-Type": "application/json" },
+  }).then((response) =>  {
+    if(response != ""){
+      return;
+    }
+  })
+  // Create subscription card
+  updateSubscriptionList(subInput.value);
   subInput.value = "";
 }
 
@@ -59,5 +89,5 @@ function logoutEvent(event) {
     }).then(function(response) {
       window.location.href = "/";
     }).catch (function(error) {
-    });
+  });
 }
