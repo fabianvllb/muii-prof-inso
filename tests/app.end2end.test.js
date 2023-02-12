@@ -79,7 +79,7 @@ describe("Authentication", () => {
         await page.screenshot({ path: screenshotsPath + "screenshot-test" + testNumber + "#" + screenShotNumber + ".png" });
         screenShotNumber += 1;
         // logout
-        pageBtn = await page.waitForSelector("#button");
+        pageBtn = await page.waitForSelector("#logout-button");
         await pageBtn.click();
         // await for redirection to / page (login form)
         await page.waitForSelector(".signup-instead");

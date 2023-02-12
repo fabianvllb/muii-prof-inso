@@ -31,12 +31,39 @@
 
   <body>
     <div class="header">
-      <div class="container">
-        <div class="logo"><img src="images/min/logo.png" alt="logo" /></div>
+      <div class="logo"><img src="images/min/logo.png" alt="logo" /></div>
+      <div>
+        <nav class="header-nav">
+          <ul>
+            <li><a href="#">Subscriptions</a></li>
+            <li><a href="#">Profile</a></li>
+            <li><a href="" class="button" id="logout-button">Log out</a></li>
+          </ul>
+        </nav>
       </div>
     </div>
     <div class="user-content">
-      <a href="" class="button" id="button">Log out</a>
+      <form action="" class="new-site-container">
+        <h3>Track new site:</h3>
+        <input type="text" id="url-input">
+        <button type="submit" id="add-new-site-button">Add</button>
+      </form>
+      <div class="subscription-container">
+        <ul class="subscription-list">
+          <!--div class="feed-card">
+            <div class="card-header">
+              <p class="card-title">Subscription Title</p>
+              <p class="card-title-separator">-</p>
+              <p>https://www.infojobs.net/jobsearch/search-results/list.xhtml</p>
+            </div>
+            <p class="card-description">Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor, nibh vel commodo posuere, justo est laoreet erat, at congue nunc quam id tellus.</p>
+            <div class="card-buttons">
+              <a href="#" id="go-to-site-btn">Site</a>
+              <a href="#">Edit</a>
+            </div>
+          </div--> 
+        </ul>
+      </div>
     </div>
   </body>
 </html>
