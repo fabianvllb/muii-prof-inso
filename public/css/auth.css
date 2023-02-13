@@ -1,0 +1,58 @@
+.auth {
+    display: flex;
+    justify-content: center;
+    margin: auto 0;
+    width: 100vw;
+}
+.form {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    max-width: 550px;
+    height: 500px;
+}
+.form input {
+    background-color: #1B1B24;
+    width: 80%;
+    max-width: 300px;
+    height: 40px;
+    border-radius: 4px;
+    border: 1px solid #6241cf75;
+    outline: none;
+    transition: all 0.15s;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 100;
+    color: #eee;
+    margin: 10px;
+    padding: 0 10px;
+}
+.form input:focus {
+    background-color: #13131b49;
+    border: 1px solid #6241cfb9;
+}
+.form .error {
+    border-color: #ab4089;
+}
+.alt-action {
+    margin: 3px 0;
+    font-size: 11px;
+    font-weight: 200;
+    text-align: center;
+    color: rgb(195, 192, 192);
+    width: 80%;
+    max-width: 300px;
+}
+.alt-action a {
+    color: #6566b7;
+    transition: all 0.55s;
+    text-decoration: none;
+    margin: 0 4px;
+    cursor: pointer;
+    font-size: 11.5px;
+}
+.alt-action a:hover {
+    color: #7b7ed0;
+}
