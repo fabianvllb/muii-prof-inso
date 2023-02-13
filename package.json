@@ -1,0 +1,47 @@
+{
+  "name": "muii-prof-inso",
+  "version": "1.0.0",
+  "description": "Proyecto de Profundización en Ingeniería de Software del Máster en Ingeniería Informática",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node -r dotenv/config server.js",
+    "test": "node -r dotenv/config --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles --coverage=100 --forceExit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fabianvc88/muii-prof-inso.git"
+  },
+  "type": "module",
+  "jest": {
+    "verbose": true,
+    "preset": "@shelf/jest-mongodb"
+  },
+  "author": "Grupo 2",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Fabianvc88/muii-prof-inso/issues"
+  },
+  "homepage": "https://github.com/Fabianvc88/muii-prof-inso#readme",
+  "dependencies": {
+    "assert": "^2.0.0",
+    "bcryptjs": "^2.4.3",
+    "connect-mongodb-session": "^3.1.1",
+    "ejs": "^3.1.8",
+    "email-validator": "^2.0.4",
+    "express": "^4.18.2",
+    "express-logger-unique-req-id": "^1.0.4",
+    "express-session": "^1.17.3",
+    "helmet": "^6.0.0",
+    "mongoose": "^6.7.0",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "@shelf/jest-mongodb": "^4.1.3",
+    "dotenv": "^16.0.3",
+    "jest": "^29.3.1",
+    "jest-puppeteer": "^6.1.1",
+    "supertest": "^6.3.1"
+  }
+}
