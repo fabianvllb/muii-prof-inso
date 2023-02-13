@@ -352,5 +352,32 @@ app.post("/subscribe", preventNotAuthenticated, (req, res) => {
   }
 });
 
+//Delete a subscribed page from the feed
+app.delete("/delete",preventNotAuthenticated,(req,res)=>{
+    const origin = req.headers["origin"];
+    const userAgent = req.headers["user-agent"];
+    debugLog(origin,userAgent,"URL delete subscription request");
+    if(req.isAuthenticated()){
+        //Retrieve the user ID from the request
+        const { title, url, description } = req.body;
+        console.log(req.user)
+        User.findOne({email:req.user.email}).then((existingUser)=>{
+            if(!existingUser){
+                debugLog("", "", "Remove subscription error: " +  req.user.email + " not found.");
+                return res.send({ errors: { generalError: "Couldn't remove subscription, please try again." } });
+            }
+            existingUser.subscriptionList = existingUser.subscriptionList.filter(x => x != url);
+            existingUser.save()
+            .then((user)=>{
+                debugLog(origin, userAgent, "Update success. User subscription list updated.");
+                res.send({success:{}});
+            })
+            .catch((err)=>{
+                debugLog(origin, userAgent, "Update error. Error updating user subscription list: " + err.message);
+                res.send({ errors: { generalError: "Please, try again." } });
+            });
+        });
+    }
+});
 // 12. export
 export { app, mongoose, User };
